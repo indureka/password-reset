@@ -12,7 +12,7 @@ const app = express();
 connectDB(); 
 
 const allowedOrigins = process.env.NODE_ENV === "production"
-  ? ["https://your-deployed-netlify-url.netlify.app"]
+  ? [process.env.FRONTEND_URL]
   : ["http://localhost:5173"];
 
 const corsOptions = {
