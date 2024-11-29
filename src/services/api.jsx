@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://password-reset-b3em.onrender.com/api",
+  baseURL: "https://password-reset-b3em.onrender.com",
   headers: {
     "Content-Type": "application/json",
   },
