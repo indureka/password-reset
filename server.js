@@ -14,7 +14,7 @@ connectDB();
 
 
 const corsOptions = {
-    origin: 'http://localhost:5173', // Replace with your frontend URL
+    origin: 'https://674966b3ec4886143b5ce900--magenta-fudge-9173a9.netlify.app/', // Replace with your frontend URL
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific methods if needed
     credentials: true, // Allow credentials (cookies, etc.) if needed
   };
