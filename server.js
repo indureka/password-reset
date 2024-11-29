@@ -16,12 +16,9 @@ const allowedOrigins = process.env.NODE_ENV === "production"
   : ["http://localhost:5173"];
 
 const corsOptions = {
-  origin: allowedOrigins,
-   // "http://localhost:5173", // Development frontend
-   // "https://674966b3ec4886143b5ce900--magenta-fudge-9173a9.netlify.app", // Deployed frontend
-  
+  origin: allowedOrigins,  
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific methods if needed
-    credentials: true, // Allow credentials (cookies, etc.) if needed
+    credentials: true, 
   };
 
   app.use((req, res, next) => {
@@ -32,6 +29,12 @@ const corsOptions = {
 // Middleware
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
+
+// Default route for the root path
+app.get('/', (req, res) => {
+  res.send('Welcome to the Password-Reset!');
+  console.log('Root route working');
+});
 
 // Routes
 app.use("/api/auth", authRoutes);
