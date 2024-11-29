@@ -12,7 +12,7 @@ const app = express();
 connectDB(); 
 
 const corsOptions = {
-  origin:'https://67497bee76908017b9740b49--magenta-fudge-9173a9.netlify.app',  
+  origin: process.env.FRONTEND_URL,  
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific methods if needed
     credentials: true, 
   };
@@ -23,8 +23,15 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 
+app.options("*", cors(corsOptions));
+
+// app.use((req, res, next) => {
+//   console.log(res.getHeaders());
+//   next();
+// });
+
 app.use((req, res, next) => {
-  console.log(res.getHeaders());
+  console.log("Request Origin:", req.headers.origin);
   next();
 });
 
