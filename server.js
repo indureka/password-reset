@@ -11,13 +11,23 @@ const app = express();
 
 connectDB(); 
 
-
+const allowedOrigins = process.env.NODE_ENV === "production"
+  ? ["https://your-deployed-netlify-url.netlify.app"]
+  : ["http://localhost:5173"];
 
 const corsOptions = {
-    origin: 'https://674966b3ec4886143b5ce900--magenta-fudge-9173a9.netlify.app/', // Replace with your frontend URL
+  origin: allowedOrigins,
+   // "http://localhost:5173", // Development frontend
+   // "https://674966b3ec4886143b5ce900--magenta-fudge-9173a9.netlify.app", // Deployed frontend
+  
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific methods if needed
     credentials: true, // Allow credentials (cookies, etc.) if needed
   };
+
+  app.use((req, res, next) => {
+    console.log(res.getHeaders());
+    next();
+  });
 
 // Middleware
 app.use(cors(corsOptions));

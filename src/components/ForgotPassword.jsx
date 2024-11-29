@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import api from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,7 +42,14 @@ const ForgotPassword = () => {
           </button>
         </form>
         {message && <p className="mt-3 text-center text-danger">{message}</p>}
+        <div className="mt-3">
+        <p>Don't have an account?</p>
+        <button onClick={() => navigate("/register")} className="btn btn-secondary">
+          Create Account
+        </button>
       </div>
+      </div>
+      
     </div>
   );
   
