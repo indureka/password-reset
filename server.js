@@ -13,7 +13,9 @@ const app = express();
 connectDB(); 
 
 const corsOptions = {
-  origin: process.env.FRONTEND_URL,  
+  // origin: 'http://localhost:5173',  
+  // origin: 'http://localhost:5173' || process.env.FRONTEND_URL ,  
+   origin: process.env.FRONTEND_URL ,  
  
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific methods if needed
     credentials: true, 

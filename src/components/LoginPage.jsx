@@ -1,39 +1,45 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import api from '../services/api';
 
 
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  // const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
   
  
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setErrorMessage('');
  
     setLoading(true);
 
     try {
-      const response = await fetch('/api/auth/login', {  // Or the full URL if needed
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      // const response = await fetch('/api/auth/login', {  // Or the full URL if needed
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({ email, password }),
+      // });
 
-      const data = await response.json();
+      const response = await api.post("/auth/login", { email, password });
 
-      if (!response.ok) {
-        // Handle non-2xx responses (e.g., 404, 500)
-        throw new Error(data.message || 'Login failed');
-      }
+      // const data = await response.json();
+      const data = response.data; 
+
+      // if (!response.ok) {
+      //   // Handle non-2xx responses (e.g., 404, 500)
+      //   throw new Error(data.message || 'Login failed');
+      // }
 
       // Successful login
       console.log('Login successful:', data); // Log the data
@@ -48,7 +54,19 @@ function LoginPage() {
 
     } catch (err) {
       console.error('Login error:', err);
-      setError(err.message); // Set the error message from the catch
+
+      if (err.response) {
+        // Server responded with an error status
+        setErrorMessage(err.response.data.message || 'Login failed');
+      } else if (err.request) {
+        // Request was made, but no response received
+        setErrorMessage('Network error: Could not connect to the server.');
+      } else {
+        // Something happened in setting up the request
+        setErrorMessage('An unexpected error occurred.');
+      }
+
+      // setError(err.message); // Set the error message from the catch
     } finally {
       setLoading(false);
     }
@@ -70,7 +88,7 @@ function LoginPage() {
         boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)'
       }}>
         <h2 className="text-center mb-4">Login</h2>
-        {error && <div className="alert alert-danger mb-3" role="alert">{error}</div>}
+        {errorMessage && <div className="alert alert-danger mb-3" role="alert">{errorMessage}</div>}
         {/* {successMessage && <div className="alert alert-success mb-3" role="alert">{successMessage}</div>} */}
         <form onSubmit={handleSubmit}>
           <div className="mb-3">

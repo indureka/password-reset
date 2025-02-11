@@ -39,15 +39,20 @@ export const registerUser = async (req, res) => {
     const { email, password } = req.body;
     try {
       const user = await User.findOne({ email });
+      console.log("entered backened");
 
       if (!user) {
+        console.log("invalid user");
         return res.status(404).json({ message : "User not found" });
+      
       }
 
       const isPasswordMatch = await bcrypt.compare(password, user.password);
 
       if(!isPasswordMatch) {
+        console.log("invalid credentials");
         return res.status(404).json({ message : "Invalid Credentials" });
+       
       }
 
       const token = jwt.sign(
@@ -55,6 +60,7 @@ export const registerUser = async (req, res) => {
       process.env.JWT_SECRET,
     { expiresIn: '1h' }
   );
+  console.log("login success");
       return res.status(200).json({ message : "loggedin Successfully",
         token: token,
       userId: user._id,
