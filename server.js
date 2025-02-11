@@ -25,14 +25,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(express.json());
-// app.use(bodyParser.json());
-
-// app.options("*", cors(corsOptions));
-
-// app.use((req, res, next) => {
-//   console.log(res.getHeaders());
-//   next();
-// });
 
 app.use((req, res, next) => {
   console.log("Request Origin:", req.headers.origin);
