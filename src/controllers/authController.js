@@ -5,7 +5,7 @@ import sendEmail from '../utils/sendEmail.js';
 import { generateToken } from '../utils/generateToken.js';
 
 export const registerUser = async (req, res) => {
-    const { email, password } = req.body;
+    const { name, email, password } = req.body;
   
     try {
       // Check if the user already exists
@@ -19,6 +19,7 @@ export const registerUser = async (req, res) => {
   
       // Create a new user
       const newUser = new User({
+        name,
         email,
         password: hashedPassword,
       });
@@ -32,6 +33,38 @@ export const registerUser = async (req, res) => {
     }
   };
 
+  // login request
+
+  export const loginUser = async (req, res) => {
+    const { email, password } = req.body;
+    try {
+      const user = await User.findOne({ email });
+
+      if (!user) {
+        return res.status(404).json({ message : "User not found" });
+      }
+
+      const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+      if(!isPasswordMatch) {
+        return res.status(404).json({ message : "Invalid Credentials" });
+      }
+
+      const token = jwt.sign(
+        { id:user._id, email:user.email },
+      process.env.JWT_SECRET,
+    { expiresIn: '1h' }
+  );
+      return res.status(200).json({ message : "loggedin Successfully",
+        token: token,
+      userId: user._id,
+       });
+    } catch(error) {
+      console.log("login error", error);
+      return res.status(500).json({ message : "Internal Server Error", error: error.message});
+    }
+  }
+
   //Request password reset
 
     export const requestPasswordReset = async (req, res) => {
@@ -42,14 +75,17 @@ export const registerUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+    
 
     const token = generateToken();
     user.resetToken = token;
     user.tokenExpiry = Date.now() + 15 * 60 * 1000; // Token expires in 15 minutes
     await user.save();
+   
 
     const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
     await sendEmail(email, "Password Reset Request", resetLink);
+ 
 
     res.status(200).json({ message: "Password reset link sent to your email" });
   } catch (error) {

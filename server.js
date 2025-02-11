@@ -6,6 +6,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import authRoutes from './src/routes/auth.js'; 
 
+
 dotenv.config();
 const app = express();
 
@@ -13,6 +14,7 @@ connectDB();
 
 const corsOptions = {
   origin: process.env.FRONTEND_URL,  
+ 
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific methods if needed
     credentials: true, 
   };
@@ -21,9 +23,11 @@ const corsOptions = {
 
 // Middleware
 app.use(cors(corsOptions));
-app.use(bodyParser.json());
 
-app.options("*", cors(corsOptions));
+app.use(express.json());
+// app.use(bodyParser.json());
+
+// app.options("*", cors(corsOptions));
 
 // app.use((req, res, next) => {
 //   console.log(res.getHeaders());
